@@ -1,0 +1,14 @@
+# Saída do build_deploy.py (regenerável)
+aadas-site/
+
+# Interno: versão de revisão e pendências (notas de diretoria/LGPD), não vai para repo público
+transparencia/index.html
+transparencia/pendencias.md
+# Originais sem tarja/compressão
+transparencia/documentos-grandes/
+
+# Local
+.claude/
+.vercel/
+.env*
+__pycache__/

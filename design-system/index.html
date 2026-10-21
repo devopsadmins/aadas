@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Design System AADAS</title>
+<meta name="description" content="Cores, tipografia, componentes, voz e regras de acessibilidade da AADAS.">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* Estilos só do guia */
+  .ds-hero { padding-top: var(--esp-8); padding-bottom: var(--esp-7); }
+  .ds-hero .grade-hero { display: grid; gap: var(--esp-6); grid-template-columns: 1.3fr 1fr; align-items: center; }
+  .ds-hero h1 { font-size: var(--fs-display); color: var(--texto-inverso); }
+  .ds-hero h1 span { color: var(--texto-inverso-destaque); }
+  .ds-hero p { color: var(--texto-inverso-suave); font-size: 1.15rem; }
+  .ds-hero .foto-balao { border-radius: 48% 48% 48% 6% / 48% 48% 48% 6%; overflow: hidden; border: 6px solid var(--fundo-destaque); aspect-ratio: 1; }
+  .ds-hero .foto-balao img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  @media (max-width: 760px) { .ds-hero .grade-hero { grid-template-columns: 1fr; } .ds-hero .foto-balao { max-width: 280px; } }
+
+  .ds-indice { background: var(--fundo-superficie); border-bottom: 1px solid var(--borda); position: sticky; top: 0; z-index: 5; }
+  .ds-indice ul { list-style: none; margin: 0 auto; padding: 0 var(--esp-4); display: flex; gap: var(--esp-1); overflow-x: auto; max-width: var(--largura-max); }
+  .ds-indice a { display: block; padding: 12px; white-space: nowrap; text-decoration: none; color: var(--texto-titulo); font-family: var(--fonte-titulo); font-weight: 500; font-size: var(--fs-pequeno); border-bottom: 3px solid transparent; }
+  .ds-indice a:hover { border-bottom-color: var(--fundo-destaque); }
+
+  main section { padding: var(--esp-8) 0 var(--esp-4); scroll-margin-top: 56px; }
+  section > .wrap > h2 + p { color: var(--texto-suave); }
+  .bloco { margin-top: var(--esp-6); }
+  .bloco > h3 { margin-bottom: var(--esp-4); }
+
+  .amostras { display: grid; gap: var(--esp-4); grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .amostra { border-radius: var(--raio-m); overflow: hidden; border: 1px solid var(--borda); background: var(--fundo-superficie); }
+  .amostra .cor { height: 88px; display: flex; align-items: flex-end; padding: var(--esp-2) var(--esp-3); font-family: var(--fonte-titulo); font-weight: 700; font-size: 1.25rem; }
+  .amostra .info { padding: var(--esp-2) var(--esp-3) var(--esp-3); font-size: var(--fs-legenda); line-height: 1.45; }
+  .amostra .info strong { display: block; font-size: var(--fs-pequeno); color: var(--texto-titulo); }
+  .amostra code { font-size: .75rem; color: var(--texto-suave); }
+  .grande .cor { height: 150px; font-size: 1.75rem; }
+
+  .proporcao { display: flex; height: 40px; border-radius: var(--raio-p); overflow: hidden; margin-top: var(--esp-4); }
+  .proporcao span { display: grid; place-items: center; font-size: var(--fs-legenda); font-weight: 700; }
+
+  .tabela-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; background: var(--fundo-superficie); font-size: var(--fs-pequeno); }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--borda); vertical-align: top; }
+  th { font-family: var(--fonte-titulo); color: var(--texto-titulo); font-weight: 600; background: var(--fundo-suave); }
+  td .chip { display: inline-block; padding: 2px 10px; border-radius: var(--raio-p); font-weight: 700; }
+
+  .escala-tipo > div { display: grid; grid-template-columns: 140px 1fr; gap: var(--esp-4); align-items: baseline; padding: var(--esp-3) 0; border-top: 1px solid var(--borda); }
+  .escala-tipo code { font-size: var(--fs-legenda); color: var(--texto-suave); }
+  @media (max-width: 600px) { .escala-tipo > div { grid-template-columns: 1fr; gap: var(--esp-1); } }
+
+  .logos { display: grid; gap: var(--esp-4); grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .logos figure { margin: 0; border-radius: var(--raio-m); border: 1px solid var(--borda); overflow: hidden; background: var(--fundo-superficie); }
+  .logos .area { padding: var(--esp-6); display: grid; place-items: center; min-height: 180px; }
+  .logos .area img { max-width: 100%; max-height: 110px; }
+  .logos figcaption { padding: var(--esp-3) var(--esp-4); font-size: var(--fs-pequeno); border-top: 1px solid var(--borda); }
+
+  .faz-nao { display: grid; gap: var(--esp-4); grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .faz-nao .card h3 { display: flex; align-items: center; gap: var(--esp-2); }
+  .faz-nao ul { margin: 0; padding-left: 1.2em; }
+  .faz-nao li { margin-bottom: var(--esp-2); }
+  .faz { border-top: 5px solid var(--sucesso); }
+  .nao { border-top: 5px solid var(--alerta); }
+
+  .linha-botoes { display: flex; flex-wrap: wrap; gap: var(--esp-3); align-items: center; }
+  .painel-inverso { padding: var(--esp-5); border-radius: var(--raio-m); margin-top: var(--esp-4); }
+
+  .espacos { display: flex; flex-wrap: wrap; gap: var(--esp-4); align-items: flex-end; }
+  .espacos div { text-align: center; font-size: var(--fs-legenda); color: var(--texto-suave); }
+  .espacos i { display: block; background: var(--fundo-destaque); margin: 0 auto var(--esp-1); }
+
+  .glossario dt { font-family: var(--fonte-titulo); font-weight: 600; color: var(--texto-titulo); margin-top: var(--esp-3); }
+  .glossario dd { margin: 0; }
+</style>
+</head>
+<body>
+
+<header class="topo">
+  <div class="wrap barra">
+    <a class="logo" href="#"><img src="../landing/assets/logo-branco.png" alt="AADAS — Associação de Atenção ao Deficiente Auditivo e Surdo"></a>
+    <span class="selo selo-libras">Design System · v1.0</span>
+  </div>
+  <div class="wrap ds-hero">
+    <div class="grade-hero">
+      <div>
+        <p class="sobretitulo" style="color: var(--texto-inverso-destaque)">Guia de marca e interface</p>
+        <h1>Uma ponte entre surdos e ouvintes, <span>para impactar comunicação.</span></h1>
+        <p>As regras visuais e de linguagem para o site, a Transparência, as redes e os materiais da AADAS. Tudo aqui sai do logo oficial, dos textos do site e das decisões das reuniões guardadas no Drive.</p>
+        <div class="linha-botoes" style="margin-top: var(--esp-5)">
+          <a class="btn btn-primario" href="#cores">Ver as cores</a>
+          <a class="btn btn-contorno" href="#componentes">Ver componentes</a>
+        </div>
+      </div>
+      <div class="foto-balao"><img src="../landing/assets/roda-familias.webp" alt="Famílias do Programa Social reunidas em roda na AADAS"></div>
+    </div>
+  </div>
+  <div class="faixa"></div>
+</header>
+
+<nav class="ds-indice" aria-label="Seções do guia">
+  <ul>
+    <li><a href="#essencia">Essência</a></li>
+    <li><a href="#logo">Logo</a></li>
+    <li><a href="#cores">Cores</a></li>
+    <li><a href="#tipografia">Tipografia</a></li>
+    <li><a href="#forma">Forma e espaço</a></li>
+    <li><a href="#componentes">Componentes</a></li>
+    <li><a href="#imagens">Fotos</a></li>
+    <li><a href="#voz">Voz e escrita</a></li>
+    <li><a href="#acessibilidade">Acessibilidade</a></li>
+    <li><a href="#uso">Como usar</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ESSÊNCIA -->
+<section id="essencia">
+  <div class="wrap">
+    <p class="sobretitulo">01 · Essência</p>
+    <h2>Quem a marca é</h2>
+    <p>Uma Organização da Sociedade Civil que fomenta a interação entre surdos e ouvintes por meio de uma comunicação bilíngue: LIBRAS e Português. Em São José dos Campos desde 1989.</p>
+
+    <div class="grade bloco">
+      <div class="balao">
+        <p class="sobretitulo" style="color: var(--texto-sobre-destaque)">Lema</p>
+        <p class="frase-destaque">Uma ponte entre surdos e ouvintes, para <em>impactar comunicação</em>.</p>
+      </div>
+      <div class="balao balao-azul">
+        <p class="sobretitulo" style="color: var(--texto-inverso-suave)">Convite</p>
+        <p class="frase-destaque">Venha ser AADAS você também!</p>
+        <p style="color: var(--texto-inverso-suave)">Apaixonar-se é bem diferente de compadecer-se. A marca convida, nunca pede pena.</p>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h3>Os cinco verbos: as letras de AADAS</h3>
+      <p>A sigla vira um chamado. É a navegação principal do site e pode organizar campanhas e redes.</p>
+      <ul class="verbos">
+        <li><a class="verbo" href="#"><span class="letra">A</span><span class="nome">Apaixone-se</span><span class="desc">Voluntariado: divulgador, atuante, logística de eventos</span></a></li>
+        <li><a class="verbo" href="#"><span class="letra">A</span><span class="nome">Aprenda</span><span class="desc">Cursos de LIBRAS e o "Você sabia…"</span></a></li>
+        <li><a class="verbo" href="#"><span class="letra">D</span><span class="nome">Doe-se</span><span class="desc">Doadores em Ação, DOAADAS, Parceria Social</span></a></li>
+        <li><a class="verbo" href="#"><span class="letra">A</span><span class="nome">Agende-se</span><span class="desc">Eventos: conhecer é conviver</span></a></li>
+        <li><a class="verbo" href="#"><span class="letra">S</span><span class="nome">Surpreenda-se</span><span class="desc">Programas, vídeos e redes</span></a></li>
+      </ul>
+    </div>
+
+    <div class="grade bloco">
+      <div class="card"><h3>Acolhedora</h3><p>Fala como quem recebe em casa. Os atendidos se veem no site, nas fotos reais deles.</p></div>
+      <div class="card"><h3>Bilíngue</h3><p>LIBRAS e Português têm o mesmo peso. Conteúdo importante tem versão em LIBRAS.</p></div>
+      <div class="card"><h3>Afirmativa</h3><p>"Juntos conseguiremos", não "sozinhos não conseguiremos". Fala de habilidade, não de limitação.</p></div>
+      <div class="card"><h3>Transparente</h3><p>Presta contas com clareza. Mostra números, documentos e de onde vem cada recurso.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGO -->
+<section id="logo">
+  <div class="wrap">
+    <p class="sobretitulo">02 · Logo</p>
+    <h2>Assinatura e símbolo</h2>
+    <p>O símbolo é um balão de fala amarelo com duas mãos que formam um coração: o sinal da AADAS. O balão é a comunicação; as mãos, a LIBRAS.</p>
+
+    <div class="logos bloco">
+      <figure><div class="area"><img src="../landing/assets/logo.png" alt="Logo AADAS colorido"></div><figcaption><strong>Principal.</strong> Fundos claros: branco, cinza-claro, amarelo-50.</figcaption></figure>
+      <figure><div class="area inverso"><img src="../landing/assets/logo-branco.png" alt="Logo AADAS na versão para fundo escuro"></div><figcaption><strong>Negativo.</strong> Sobre o azul AADAS ou foto escurecida.</figcaption></figure>
+      <figure><div class="area" style="background: var(--fundo-suave)"><img src="../landing/assets/simbolo.png" alt="Símbolo AADAS: balão amarelo com mãos em coração"></div><figcaption><strong>Símbolo.</strong> Avatar de redes, favicon e selo. Mínimo de 24 px.</figcaption></figure>
+    </div>
+
+    <div class="faz-nao bloco">
+      <div class="card faz">
+        <h3>Faça</h3>
+        <ul>
+          <li>Deixe ao redor do logo um respiro mínimo igual à altura da letra "A" de AADAS.</li>
+          <li>Use a assinatura completa com no mínimo 120 px de largura no digital e 35 mm no impresso. Abaixo disso, só o símbolo.</li>
+          <li>No topo do site, logo branco sobre o azul, com a faixa amarela de 6 px embaixo.</li>
+        </ul>
+      </div>
+      <div class="card nao">
+        <h3>Não faça</h3>
+        <ul>
+          <li>Trocar as cores, aplicar sombra, contorno ou degradê.</li>
+          <li>Colocar o logo colorido sobre o amarelo (o símbolo some) ou sobre foto sem escurecer.</li>
+          <li>Trocar as barras azuis por preto. A marca é azul e amarelo, decisão registrada na revisão do site.</li>
+          <li>Recriar o sinal das mãos com outra foto ou gesto: confunde com o sinal da AADAS.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CORES -->
+<section id="cores">
+  <div class="wrap">
+    <p class="sobretitulo">03 · Cores</p>
+    <h2>Azul e amarelo, medidos no logo</h2>
+    <p>As duas cores oficiais saíram do arquivo do logo, não de memória. Os tons de apoio só existem para dar contraste e estados.</p>
+
+    <div class="amostras bloco">
+      <div class="amostra grande"><div class="cor" style="background:#1A184D;color:#fff">Azul AADAS</div><div class="info"><strong>#1A184D</strong>RGB 26 24 77<br><code>--aadas-azul-900</code></div></div>
+      <div class="amostra grande"><div class="cor" style="background:#F6C313;color:#1A184D">Amarelo AADAS</div><div class="info"><strong>#F6C313</strong>RGB 246 195 19<br><code>--aadas-amarelo-500</code></div></div>
+    </div>
+
+    <div class="proporcao" aria-label="Proporção de uso: 60% claros, 25% azul, 10% amarelo, 5% estados">
+      <span style="flex:60;background:var(--fundo-pagina);color:var(--texto-suave)">Claros 60%</span>
+      <span style="flex:25;background:var(--aadas-azul-900);color:#fff">Azul 25%</span>
+      <span style="flex:10;background:var(--aadas-amarelo-500);color:var(--aadas-azul-900)">10%</span>
+      <span style="flex:5;background:var(--aadas-laranja-700)" title="Estados"></span>
+    </div>
+
+    <div class="bloco">
+      <h3>Apoio</h3>
+      <div class="amostras">
+        <div class="amostra"><div class="cor" style="background:#12113A"></div><div class="info"><strong>Azul 950</strong>#12113A<br><code>--aadas-azul-950</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#2E2B7A"></div><div class="info"><strong>Azul 700 · links</strong>#2E2B7A<br><code>--aadas-azul-700</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#4A47A3"></div><div class="info"><strong>Azul 500</strong>#4A47A3<br><code>--aadas-azul-500</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#E8E7F2"></div><div class="info"><strong>Azul 100</strong>#E8E7F2<br><code>--aadas-azul-100</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#7A5E00"></div><div class="info"><strong>Amarelo 700 · texto</strong>#7A5E00<br><code>--aadas-amarelo-700</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#FBDC6A"></div><div class="info"><strong>Amarelo 300 · hover</strong>#FBDC6A<br><code>--aadas-amarelo-300</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#FFFDF2"></div><div class="info"><strong>Amarelo 50</strong>#FFFDF2<br><code>--aadas-amarelo-50</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#1C2333"></div><div class="info"><strong>Texto</strong>#1C2333<br><code>--aadas-cinza-900</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#5B6478"></div><div class="info"><strong>Texto suave</strong>#5B6478<br><code>--aadas-cinza-600</code></div></div>
+        <div class="amostra"><div class="cor" style="background:#F5F6FA"></div><div class="info"><strong>Fundo</strong>#F5F6FA<br><code>--aadas-cinza-100</code></div></div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h3>Combinações aprovadas (WCAG AA)</h3>
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr><th>Texto sobre fundo</th><th>Contraste</th><th>Uso</th></tr></thead>
+          <tbody>
+            <tr><td><span class="chip" style="background:#fff;color:#1A184D;border:1px solid var(--borda)">Azul sobre branco</span></td><td>16,4 : 1</td><td>Títulos, botões contorno</td></tr>
+            <tr><td><span class="chip" style="background:#F6C313;color:#1A184D">Azul sobre amarelo</span></td><td>9,9 : 1</td><td>Botão principal, balão, selos de destaque</td></tr>
+            <tr><td><span class="chip" style="background:#1A184D;color:#F6C313">Amarelo sobre azul</span></td><td>9,9 : 1</td><td>Destaques no topo e rodapé</td></tr>
+            <tr><td><span class="chip" style="background:#1A184D;color:#C9CCE0">Azul-claro sobre azul</span></td><td>10,3 : 1</td><td>Texto corrido em fundo escuro</td></tr>
+            <tr><td><span class="chip" style="background:#fff;color:#5B6478;border:1px solid var(--borda)">Cinza suave sobre branco</span></td><td>5,9 : 1</td><td>Legendas e textos de apoio</td></tr>
+            <tr><td><span class="chip" style="background:#fff;color:#F6C313;border:1px solid var(--borda)">Amarelo sobre branco</span></td><td><strong style="color:var(--alerta)">1,6 : 1 · proibido</strong></td><td>Nunca para texto ou ícone. Use amarelo 700.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h3>Estados</h3>
+      <div class="linha-botoes">
+        <span class="selo selo-ok">publicado</span>
+        <span class="selo selo-pend">falta documento</span>
+        <span class="selo selo-tarja">tarjar antes de publicar</span>
+        <span class="selo selo-libras">com LIBRAS</span>
+        <span class="selo">PDF · 2025</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIPOGRAFIA -->
+<section id="tipografia">
+  <div class="wrap">
+    <p class="sobretitulo">04 · Tipografia</p>
+    <h2>Letras feitas para ler fácil</h2>
+    <p>Para muitos surdos, o Português é a segunda língua. Por isso as duas famílias foram escolhidas pela legibilidade: Lexend nasceu de pesquisa sobre fluência de leitura; Atkinson Hyperlegible, para diferenciar bem cada letra. As duas são gratuitas (Google Fonts).</p>
+
+    <div class="grade bloco">
+      <div class="card">
+        <p class="sobretitulo">Títulos · Lexend</p>
+        <p style="font-family:var(--fonte-titulo);font-size:3rem;font-weight:700;color:var(--texto-titulo);margin:0;line-height:1">Aa</p>
+        <p style="font-family:var(--fonte-titulo);margin-top:var(--esp-3)">Pesos 500, 600, 700 e 800. Arredondada e geométrica, conversa com o desenho do nome AADAS.</p>
+      </div>
+      <div class="card">
+        <p class="sobretitulo">Texto · Atkinson Hyperlegible</p>
+        <p style="font-size:3rem;font-weight:700;color:var(--texto-titulo);margin:0;line-height:1">Aa Il1 0O</p>
+        <p style="margin-top:var(--esp-3)">Pesos 400 e 700. "I", "l" e "1" não se confundem. Corpo mínimo de 17 px no site.</p>
+      </div>
+    </div>
+
+    <div class="escala-tipo bloco">
+      <div><code>display · 36–56</code><span style="font-family:var(--fonte-titulo);font-size:var(--fs-display);font-weight:800;color:var(--texto-titulo);line-height:1.1">Apaixone-se</span></div>
+      <div><code>h1 · 30–42</code><span style="font-family:var(--fonte-titulo);font-size:var(--fs-h1);font-weight:700;color:var(--texto-titulo)">Transparência</span></div>
+      <div><code>h2 · 24–30</code><span style="font-family:var(--fonte-titulo);font-size:var(--fs-h2);font-weight:700;color:var(--texto-titulo)">Programa Social</span></div>
+      <div><code>h3 · 20</code><span style="font-family:var(--fonte-titulo);font-size:var(--fs-h3);font-weight:600;color:var(--texto-titulo)">Oficinas de LIBRAS</span></div>
+      <div><code>corpo · 17</code><span>Cerca de 130 pessoas convivem com a gente, entre elas 65 surdos de diferentes idades e suas famílias.</span></div>
+      <div><code>pequeno · 15</code><span style="font-size:var(--fs-pequeno)">Texto de apoio, descrições de cartão.</span></div>
+      <div><code>legenda · 13</code><span style="font-size:var(--fs-legenda);color:var(--texto-suave)">PDF · 2025 · atualizado em 21/10/2026</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FORMA -->
+<section id="forma">
+  <div class="wrap">
+    <p class="sobretitulo">05 · Forma e espaço</p>
+    <h2>O balão como forma-mãe</h2>
+    <p>O balão do símbolo vira a forma dos blocos de destaque: três cantos redondos e um canto quase reto embaixo à esquerda, a "ponta" da fala. Use em destaques, verbos e janelas de LIBRAS. Cartões comuns ficam com o raio médio.</p>
+
+    <div class="grade bloco">
+      <div class="balao"><strong>Balão</strong><br><code style="font-size:var(--fs-legenda)">--raio-balao: 28 28 28 4</code></div>
+      <div class="card"><strong>Cartão</strong><br><code style="font-size:var(--fs-legenda)">--raio-m: 12px</code></div>
+      <div style="display:flex;align-items:center"><span class="btn btn-secundario">Pílula · botões</span></div>
+    </div>
+
+    <div class="bloco">
+      <h3>Espaçamento (base 4)</h3>
+      <div class="espacos">
+        <div><i style="width:4px;height:4px"></i>4</div>
+        <div><i style="width:8px;height:8px"></i>8</div>
+        <div><i style="width:12px;height:12px"></i>12</div>
+        <div><i style="width:16px;height:16px"></i>16</div>
+        <div><i style="width:24px;height:24px"></i>24</div>
+        <div><i style="width:32px;height:32px"></i>32</div>
+        <div><i style="width:48px;height:48px"></i>48</div>
+        <div><i style="width:64px;height:64px"></i>64</div>
+        <div><i style="width:96px;height:96px"></i>96</div>
+      </div>
+      <p style="margin-top:var(--esp-4)">Conteúdo com largura máxima de 1120 px e margem lateral de 16 px no celular. Seções separadas por 64 px.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPONENTES -->
+<section id="componentes">
+  <div class="wrap">
+    <p class="sobretitulo">06 · Componentes</p>
+    <h2>Peças prontas</h2>
+    <p>Todas as classes estão em <code>components.css</code>. Copie o HTML de cada exemplo.</p>
+
+    <div class="bloco">
+      <h3>Botões</h3>
+      <div class="linha-botoes">
+        <a class="btn btn-primario" href="#">Quero me apaixonar</a>
+        <a class="btn btn-secundario" href="#">Torne-se um DOAADAS</a>
+        <a class="btn btn-contorno" href="#">Ver programação</a>
+        <button class="btn btn-primario" disabled>Inscrições encerradas</button>
+      </div>
+      <div class="painel-inverso inverso linha-botoes">
+        <a class="btn btn-primario" href="#">Inscreva-se</a>
+        <a class="btn btn-contorno" href="#">Conheça os programas</a>
+      </div>
+      <p style="margin-top:var(--esp-3);font-size:var(--fs-pequeno);color:var(--texto-suave)">Um botão principal (amarelo) por tela. Texto do botão diz a ação: "Inscreva-se", não "Clique aqui".</p>
+    </div>
+
+    <div class="bloco">
+      <h3>Frase de destaque em balão</h3>
+      <div class="balao">
+        <p class="frase-destaque">Quando se sonha junto, é o começo da realidade.</p>
+        <p>Nossos sonhos só se realizam se mais pessoas vierem sonhar e realizar com a gente.</p>
+        <a class="btn btn-secundario" href="#">Doe-se</a>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h3>Cartão de programa</h3>
+      <div class="grade">
+        <a class="card card-foto" href="#"><img src="../landing/assets/oficina-familias.webp" alt="Oficina com famílias do Programa Social"><div class="corpo"><span class="selo">Programa Social</span><h3 style="margin-top:var(--esp-3)">Oficinas de convivência</h3><p style="margin:0">LIBRAS, fala, escrita e fortalecimento de vínculos para surdos e suas famílias.</p></div></a>
+        <a class="card card-foto" href="#"><img src="../landing/assets/laboratorio.webp" alt="Sala de atendimento do Espaço Auditivo"><div class="corpo"><span class="selo">Espaço Auditivo</span><h3 style="margin-top:var(--esp-3)">Audição e fala</h3><p style="margin:0">Do diagnóstico à adaptação do aparelho, com fonoaudiologia e psicologia.</p></div></a>
+        <a class="card card-foto" href="#"><img src="../landing/assets/festa.webp" alt="Festa da AADAS com surdos e ouvintes"><div class="corpo"><span class="selo selo-libras">Eventos</span><h3 style="margin-top:var(--esp-3)">Conhecer é conviver</h3><p style="margin:0">Cerca de 7 eventos por ano para aproximar surdos e ouvintes.</p></div></a>
+      </div>
+    </div>
+
+    <div class="bloco grade">
+      <div>
+        <h3>"Você sabia…"</h3>
+        <div class="sabia">
+          <p class="sobretitulo">Você sabia…</p>
+          <p>que a Língua de Sinais não é universal? Surdos de países diferentes falam línguas diferentes, com sotaques regionais.</p>
+        </div>
+      </div>
+      <div>
+        <h3>Depoimento</h3>
+        <div class="card depoimento">
+          <img src="../landing/assets/roda-familias.webp" alt="">
+          <div>
+            <blockquote>Texto do depoimento da família, transcrito do vídeo, em até três linhas.</blockquote>
+            <cite>Nome, mãe de aluno do Programa Social</cite>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h3>Números de impacto</h3>
+      <div class="grade inverso painel-inverso">
+        <div class="numero"><div class="valor">1989</div><div class="rotulo">ano de fundação</div></div>
+        <div class="numero"><div class="valor">~130</div><div class="rotulo">pessoas no Programa Social</div></div>
+        <div class="numero"><div class="valor">8</div><div class="rotulo">turmas de LIBRAS por ano</div></div>
+        <div class="numero"><div class="valor">~3 mil</div><div class="rotulo">pessoas alcançadas por ano</div></div>
+      </div>
+    </div>
+
+    <div class="bloco grade">
+      <div>
+        <h3>Vídeo com janela de LIBRAS</h3>
+        <div class="video-libras">
+          <img src="../landing/assets/videochamada.webp" alt="">
+          <div class="legenda">Legenda em português sempre ativa</div>
+          <div class="janela">Janela de LIBRAS</div>
+        </div>
+      </div>
+      <div>
+        <h3>Formulário</h3>
+        <div class="card">
+          <div class="campo"><label for="f-nome">Nome</label><input id="f-nome" autocomplete="name"></div>
+          <div class="campo"><label for="f-perfil">Como você quer participar?</label><select id="f-perfil"><option>Divulgador</option><option>Atuante</option><option>Logística em eventos</option></select></div>
+          <div class="campo erro"><label for="f-mail">E-mail</label><input id="f-mail" type="email" value="maria@" aria-invalid="true" aria-describedby="f-mail-erro"><span class="msg-erro" id="f-mail-erro">Falta o final do e-mail, por exemplo maria@gmail.com</span></div>
+          <button class="btn btn-primario" type="button">Enviar inscrição</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bloco">
+      <h3>Lista de documentos (Transparência)</h3>
+      <div class="card">
+        <ul class="docs">
+          <li><a href="#">Estatuto Social vigente</a><span class="meta">PDF · 2022</span></li>
+          <li><a href="#">Relatório de Atividades 2025</a><span class="selo selo-tarja">tarjar antes de publicar</span></li>
+          <li><span>Ata da assembleia de eleição 2026–2030</span><span class="selo selo-pend">falta</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOTOS -->
+<section id="imagens">
+  <div class="wrap">
+    <p class="sobretitulo">07 · Fotos</p>
+    <h2>As pessoas da AADAS no centro</h2>
+    <p>Fotos reais dos atendidos, famílias, alunos e equipe, para que eles se reconheçam no site e se sintam em casa. Banco de imagem só em último caso.</p>
+    <div class="grade bloco">
+      <div class="card card-foto"><img src="../landing/assets/fachada.webp" alt="Fachada da sede da AADAS"><div class="corpo"><strong>Lugar</strong><p style="margin:0">A sede, salas e oficinas: mostram que existe um espaço físico.</p></div></div>
+      <div class="card card-foto"><img src="../landing/assets/oficina-familias.webp" alt="Famílias em oficina"><div class="corpo"><strong>Convivência</strong><p style="margin:0">Surdos e ouvintes juntos, em ação, com expressão no rosto.</p></div></div>
+      <div class="card card-foto"><img src="../landing/assets/festa.webp" alt="Festa com participantes"><div class="corpo"><strong>Celebração</strong><p style="margin:0">Eventos e festas: alegria, não pena.</p></div></div>
+    </div>
+    <div class="faz-nao bloco">
+      <div class="card faz"><h3>Faça</h3><ul>
+        <li>Quando a foto mostrar um sinal, use o sinal certo da palavra (Apaixone-se, Aprenda, Doe-se…) e confira com um surdo da equipe.</li>
+        <li>Enquadre mãos e rosto inteiros: a expressão facial faz parte da LIBRAS.</li>
+        <li>Tenha autorização de imagem, ainda mais de crianças.</li>
+      </ul></div>
+      <div class="card nao"><h3>Não faça</h3><ul>
+        <li>Usar gesto qualquer (coração com as mãos, joinha posado) onde se espera um sinal de LIBRAS.</li>
+        <li>Cortar as mãos de quem está sinalizando.</li>
+        <li>Fotos tristes, de olhar para baixo, que pedem compaixão.</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOZ -->
+<section id="voz">
+  <div class="wrap">
+    <p class="sobretitulo">08 · Voz e escrita</p>
+    <h2>Fale com, nunca sobre</h2>
+    <p>Frases curtas e diretas, verbos no imperativo convidativo e "você". O próprio Drive registra: "simplificar" e "comunicação mais simples e direta".</p>
+    <div class="tabela-wrap bloco">
+      <table>
+        <thead><tr><th>Em vez de</th><th>Escreva</th><th>Por quê</th></tr></thead>
+        <tbody>
+          <tr><td>Surdo-mudo</td><td>Surdo / pessoa surda</td><td>Surdo não é mudo; o termo é rejeitado pela comunidade.</td></tr>
+          <tr><td>Libras / libra / linguagem de sinais</td><td>LIBRAS · Língua Brasileira de Sinais</td><td>É língua, com gramática própria. Grafia da casa: em maiúsculas.</td></tr>
+          <tr><td>Portador de deficiência</td><td>Pessoa com deficiência auditiva</td><td>Ninguém "porta" a deficiência.</td></tr>
+          <tr><td>Não será sozinhos que conseguiremos</td><td>Juntos conseguiremos</td><td>Afirmar, não negar (decisão da página Doe-se).</td></tr>
+          <tr><td>Ajude os coitados</td><td>Apaixone-se pela causa</td><td>Apaixonar, não compadecer.</td></tr>
+          <tr><td>Clique aqui</td><td>Inscreva-se como divulgador</td><td>O link diz o que acontece.</td></tr>
+          <tr><td>Planos de voluntário</td><td>Perfis: Divulgador, Atuante, Logística em eventos</td><td>Nomeação definida na reunião de ajustes.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <dl class="glossario bloco card">
+      <dt>DOAADAS</dt><dd>Programa de doação mensal. Sempre em maiúsculas, com AADAS dentro.</dd>
+      <dt>Doadores em Ação</dt><dd>Doadores automáticos da Nota Fiscal Paulista.</dd>
+      <dt>CODA</dt><dd>Ouvinte filho de pais surdos (Children of Deaf Adults).</dd>
+      <dt>Sinal próprio</dt><dd>O "nome" de uma pessoa em LIBRAS, dado pelos surdos.</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ACESSIBILIDADE -->
+<section id="acessibilidade">
+  <div class="wrap">
+    <p class="sobretitulo">09 · Acessibilidade</p>
+    <h2>Uma organização de surdos precisa dar o exemplo</h2>
+    <div class="grade bloco">
+      <div class="card"><h3>Vídeo</h3><p style="margin:0">Todo vídeo com legenda em português e janela de LIBRAS. Nada importante só por áudio.</p></div>
+      <div class="card"><h3>Contraste</h3><p style="margin:0">Mínimo 4,5 : 1 para texto, 3 : 1 para bordas de campos e ícones. Amarelo nunca é cor de texto sobre branco.</p></div>
+      <div class="card"><h3>Foco</h3><p style="margin:0">Anel amarelo de 3 px com contorno azul: aparece sobre qualquer fundo.</p></div>
+      <div class="card"><h3>Toque</h3><p style="margin:0">Alvos de no mínimo 44 px de altura. Formulários com rótulo visível, nunca só placeholder.</p></div>
+      <div class="card"><h3>Movimento</h3><p style="margin:0">Animações curtas e desligadas para quem pede menos movimento no sistema.</p></div>
+      <div class="card"><h3>Texto alternativo</h3><p style="margin:0">Fotos com descrição do que acontece. Se alguém sinaliza, diga o sinal: "Aluna faz o sinal de Aprenda".</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- USO -->
+<section id="uso">
+  <div class="wrap">
+    <p class="sobretitulo">10 · Como usar</p>
+    <h2>Nas páginas do site</h2>
+    <div class="card bloco">
+<pre style="margin:0;overflow-x:auto;font-size:var(--fs-pequeno)"><code>&lt;link rel="stylesheet" href="/design-system/tokens.css"&gt;
+&lt;link rel="stylesheet" href="/design-system/components.css"&gt;
+
+&lt;a class="btn btn-primario" href="/apaixone-se"&gt;Quero me apaixonar&lt;/a&gt;
+&lt;div class="balao"&gt;&lt;p class="frase-destaque"&gt;…&lt;/p&gt;&lt;/div&gt;</code></pre>
+    </div>
+    <p class="bloco">Arquivos: <code>tokens.css</code> (variáveis), <code>tokens.json</code> (mesmos valores para Figma, Canva ou Tailwind), <code>components.css</code> (peças) e <code>README.md</code> (regras resumidas).</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="rodape">
+  <div class="wrap grade">
+    <div>
+      <img src="../landing/assets/logo-branco.png" alt="AADAS" style="height:48px;width:auto">
+      <p class="lema" style="margin-top:var(--esp-4)">Uma ponte entre surdos e ouvintes, para impactar comunicação.</p>
+    </div>
+    <div>
+      <p>Av. São José, 448 – Vila Santa Helena<br>São José dos Campos/SP · CEP 12209-010</p>
+      <p><a href="mailto:contato@aadasjc.org">contato@aadasjc.org</a><br>instagram.com/aadasjc · facebook.com/aadasjc</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

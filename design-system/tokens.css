@@ -1,0 +1,134 @@
+/*
+  AADAS Design System — tokens
+  Cores medidas no logo oficial (landing/assets/logo.png): azul #1A184D, amarelo #F6C313.
+  Três camadas: primitivo (--aadas-*) → semântico (--cor-*, --texto-*) → componente (--btn-*, --balao-*).
+  Use sempre o semântico ou o de componente nas páginas; o primitivo só aqui dentro.
+*/
+
+@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Lexend:wght@400;500;600;700;800&display=swap");
+
+:root {
+  /* ---------- 1. Primitivos ---------- */
+
+  /* Azul AADAS (cor do nome no logo) */
+  --aadas-azul-950: #12113a;
+  --aadas-azul-900: #1a184d; /* oficial */
+  --aadas-azul-800: #24216a;
+  --aadas-azul-700: #2e2b7a;
+  --aadas-azul-500: #4a47a3;
+  --aadas-azul-300: #a9a7c9;
+  --aadas-azul-100: #e8e7f2;
+  --aadas-azul-50:  #f4f4fa;
+
+  /* Amarelo AADAS (balão do símbolo) */
+  --aadas-amarelo-700: #7a5e00; /* só para texto sobre fundo claro */
+  --aadas-amarelo-600: #8a6a00;
+  --aadas-amarelo-500: #f6c313; /* oficial */
+  --aadas-amarelo-300: #fbdc6a;
+  --aadas-amarelo-100: #fdf1c4;
+  --aadas-amarelo-50:  #fffdf2;
+
+  /* Neutros (levemente azulados, para conversar com o azul) */
+  --aadas-cinza-900: #1c2333;
+  --aadas-cinza-600: #5b6478;
+  --aadas-cinza-300: #dde2ec;
+  --aadas-cinza-100: #f5f6fa;
+  --aadas-branco:    #ffffff;
+
+  /* Estados */
+  --aadas-verde-700: #1f7a4d;  --aadas-verde-50: #e6f4ec;
+  --aadas-laranja-700: #b45309; --aadas-laranja-50: #fff4e0;
+  --aadas-vinho-700: #9f1239;   --aadas-vinho-50: #ffe4ea;
+
+  /* ---------- 2. Semânticos ---------- */
+
+  --cor-marca: var(--aadas-azul-900);
+  --cor-destaque: var(--aadas-amarelo-500);
+
+  --fundo-pagina: var(--aadas-cinza-100);
+  --fundo-superficie: var(--aadas-branco);
+  --fundo-suave: var(--aadas-azul-50);
+  --fundo-destaque: var(--aadas-amarelo-500);
+  --fundo-destaque-suave: var(--aadas-amarelo-50);
+  --fundo-inverso: var(--aadas-azul-900);
+
+  --texto: var(--aadas-cinza-900);          /* 15,6:1 sobre branco */
+  --texto-titulo: var(--aadas-azul-900);    /* 16,4:1 */
+  --texto-suave: var(--aadas-cinza-600);    /* 5,9:1 */
+  --texto-link: var(--aadas-azul-700);      /* 12:1 */
+  --texto-sobre-destaque: var(--aadas-azul-900); /* 9,9:1 sobre amarelo */
+  --texto-inverso: var(--aadas-branco);
+  --texto-inverso-suave: #c9cce0;           /* 10,3:1 sobre azul */
+  --texto-inverso-destaque: var(--aadas-amarelo-500); /* 9,9:1 sobre azul */
+
+  --borda: var(--aadas-cinza-300);
+  --borda-forte: var(--aadas-azul-900);
+  --foco: var(--aadas-amarelo-500);
+
+  --sucesso: var(--aadas-verde-700);    --sucesso-fundo: var(--aadas-verde-50);
+  --pendente: var(--aadas-laranja-700); --pendente-fundo: var(--aadas-laranja-50);
+  --alerta: var(--aadas-vinho-700);     --alerta-fundo: var(--aadas-vinho-50);
+
+  /* Tipografia */
+  --fonte-titulo: "Lexend", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --fonte-texto: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  --fs-display: clamp(2.25rem, 5vw, 3.5rem);
+  --fs-h1: clamp(1.9rem, 4vw, 2.6rem);
+  --fs-h2: clamp(1.5rem, 3vw, 1.9rem);
+  --fs-h3: 1.25rem;
+  --fs-corpo: 1.0625rem;   /* 17px: leitura confortável para quem lê português como 2ª língua */
+  --fs-pequeno: 0.9375rem;
+  --fs-legenda: 0.8125rem;
+
+  --lh-titulo: 1.15;
+  --lh-corpo: 1.6;
+  --medida-texto: 68ch;
+
+  /* Espaçamento (base 4) */
+  --esp-1: 4px;  --esp-2: 8px;  --esp-3: 12px; --esp-4: 16px;
+  --esp-5: 24px; --esp-6: 32px; --esp-7: 48px; --esp-8: 64px; --esp-9: 96px;
+
+  /* Forma */
+  --raio-p: 6px;
+  --raio-m: 12px;
+  --raio-g: 20px;
+  --raio-pilula: 999px;
+  /* Balão: o canto inferior esquerdo é a "ponta" da fala, como no símbolo */
+  --raio-balao: 28px 28px 28px 4px;
+
+  --sombra-1: 0 1px 2px rgba(26, 24, 77, .06), 0 1px 3px rgba(26, 24, 77, .08);
+  --sombra-2: 0 8px 24px rgba(26, 24, 77, .12);
+
+  --largura-max: 1120px;
+  --toque-min: 44px;
+
+  --dur-rapida: 120ms;
+  --dur-media: 220ms;
+  --curva: cubic-bezier(.2, .7, .2, 1);
+
+  /* ---------- 3. Componentes ---------- */
+
+  --btn-primario-fundo: var(--fundo-destaque);
+  --btn-primario-texto: var(--texto-sobre-destaque);
+  --btn-primario-fundo-hover: var(--aadas-amarelo-300);
+  --btn-secundario-fundo: var(--fundo-inverso);
+  --btn-secundario-texto: var(--texto-inverso);
+  --btn-secundario-fundo-hover: var(--aadas-azul-700);
+  --btn-raio: var(--raio-pilula);
+
+  --balao-fundo: var(--fundo-destaque);
+  --balao-texto: var(--texto-sobre-destaque);
+  --balao-raio: var(--raio-balao);
+
+  --card-fundo: var(--fundo-superficie);
+  --card-borda: var(--borda);
+  --card-raio: var(--raio-m);
+
+  --campo-borda: #8b90a3; /* 3,2:1 — limite de componente de interface */
+  --campo-raio: var(--raio-p);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-rapida: 0ms; --dur-media: 0ms; }
+}
