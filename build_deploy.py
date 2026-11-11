@@ -1,8 +1,8 @@
 """Monta a pasta aadas-site/ para publicação de teste.
 
-- landing/index.html vira a raiz do site, com a seção Transparência trocada pela lista de DOCUMENTOS;
-- a página /transparencia é gerada só com a lista de DOCUMENTOS (transparencia/index.html fica
-  como versão interna de revisão e não vai para o site);
+- landing/index.html vira a raiz do site; a seção Transparência dela só chama o portal;
+- a página /transparencia é gerada a partir da landing (mesmo topo, menu e rodapé) com as pastas
+  de DOCUMENTOS (transparencia/index.html fica como versão interna de revisão e não vai para o site);
 - as duas páginas recebem noindex (o vercel.json repete isso no cabeçalho HTTP).
 """
 import re
@@ -27,15 +27,16 @@ def remove(texto, padrao, minimo=1):
     return novo
 
 
-# Única fonte da lista publicada: (pasta, [(subtítulo ou None, [(título, arquivo em transparencia/documentos)])])
+# Única fonte da lista publicada: (id da pasta, pasta, [(subtítulo ou None, [(título, arquivo em transparencia/documentos)])])
 # Na página cada pasta aparece fechada, só com o título; o clique abre os documentos.
+# O id abre a pasta direto pelo link (/transparencia#contabeis), usado pelos atalhos da landing.
 DOCUMENTOS = [
-    ("Documentos institucionais", [(None, [
+    ("institucionais", "Documentos institucionais", [(None, [
         ("Estatuto Social", "estatuto-social.pdf"),
         ("Regulamento Interno", "regulamento-interno.pdf"),
         ("Certidão de Dirigentes e Conselheiros, gestão 2026 a 2030", "certidao-dirigentes-2026-2030.pdf"),
     ])]),
-    ("Convênios e parcerias", [
+    ("parcerias", "Convênios e parcerias", [
         ("Termo de Colaboração nº 32/2018, Prefeitura de São José dos Campos", [
             ("Termo de Colaboração nº 32/2018", "tc-32-2018-termo.pdf"),
             ("Plano de Trabalho 2026", "plano-de-trabalho-2026.pdf"),
@@ -46,11 +47,12 @@ DOCUMENTOS = [
             ("Relação de cargos e salários 2025", "cargos-e-salarios-2025.pdf"),
         ]),
     ]),
-    ("Documentos contábeis", [(None, [
+    ("contabeis", "Documentos contábeis", [(None, [
         ("Demonstrações contábeis 2025", "demonstracoes-contabeis-2025.pdf"),
         ("Demonstrações contábeis 2024", "demonstracoes-contabeis-2024.pdf"),
+        ("Demonstrações contábeis 2023", "demonstracoes-contabeis-2023.pdf"),
     ])]),
-    ("Relatórios de Atividades", [(None, [
+    ("relatorios", "Relatórios de atividades", [(None, [
         (f"Relatório de atividades {ano}", f"relatorio-atividades-{ano}.pdf") for ano in range(2025, 2017, -1)
     ])]),
 ]
@@ -58,6 +60,7 @@ DOCUMENTOS = [
 # CSS das pastas recolhíveis, igual na landing e na /transparencia
 CSS_PASTAS = """
   .grupo-docs { margin: 0 0 10px; border: 1px solid var(--borda-pasta); border-radius: 12px; background: var(--fundo-pasta); }
+  .grupo-docs { scroll-margin-top: 84px; }
   .grupo-docs > summary { cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
                           gap: 12px; padding: 14px 16px; font-weight: 700; font-size: 1.05rem; }
   .grupo-docs > summary::-webkit-details-marker { display: none; }
@@ -70,105 +73,102 @@ CSS_PASTAS = """
 
 
 def documentos():
-    for _, subgrupos in DOCUMENTOS:
+    for _, _, subgrupos in DOCUMENTOS:
         for _, docs in subgrupos:
             yield from docs
 
 
 def lista_documentos(nivel):
     blocos = []
-    for pasta, subgrupos in DOCUMENTOS:
+    for ident, pasta, subgrupos in DOCUMENTOS:
         partes = []
         for sub, docs in subgrupos:
             itens = "\n".join(
                 f'        <li><a href="/transparencia/documentos/{arq}" download>{titulo}</a></li>' for titulo, arq in docs)
             cab = f'      <h{nivel + 1} class="subtitulo">{sub}</h{nivel + 1}>\n' if sub else ""
             partes.append(f'{cab}      <ul class="lista-docs">\n{itens}\n      </ul>')
-        blocos.append(f'  <details class="grupo-docs">\n    <summary>{pasta}</summary>\n'
+        blocos.append(f'  <details class="grupo-docs" id="{ident}">\n    <summary>{pasta}</summary>\n'
                       f'    <div class="conteudo">\n' + "\n".join(partes) + '\n    </div>\n  </details>')
     return "\n".join(blocos)
 
 
-VLIBRAS = ('<div vw class="enabled"><div vw-access-button class="active"></div>'
-           '<div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div></div>\n'
-           '<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>\n'
-           "<script>if (window.VLibras) new window.VLibras.Widget('https://vlibras.gov.br/app');</script>\n")
+PORTAL = "/transparencia"
 
 
 def landing():
     t = (RAIZ / "landing/index.html").read_text(encoding="utf-8")
     t = troca(t, '<meta charset="utf-8">\n', '<meta charset="utf-8">\n' + NOINDEX)
-    t = t.replace("../transparencia/index.html", "transparencia/index.html")
-    t = re.sub(r"(<!-- documentos:inicio -->\n).*?(\s*<!-- documentos:fim -->)",
-               lambda m: m.group(1) + lista_documentos(3) + m.group(2), t, count=1, flags=re.S)
-    t = troca(t, "  .grupo-docs h3 { font-size: 1.05rem; margin: 0 0 8px; }\n",
-              "  :root { --borda-pasta: var(--linha); --fundo-pasta: var(--superficie); }" + CSS_PASTAS)
-    if "documentos:inicio" not in t:
-        raise SystemExit("marcador da lista de documentos não encontrado na landing")
-    return t
+    return troca(t, "../transparencia/index.html", PORTAL)
+
+
+# CSS só do portal: cabeçalho da página, grade das pastas e lista de documentos
+CSS_PORTAL = """
+  /* Portal da Transparência */
+  .portal { padding: 56px 0 88px; }
+  .portal h1 { font-size: clamp(2.1rem, 4vw, 3rem); font-weight: 700; margin-top: 10px; }
+  .portal .lead { font-size: 1.1rem; }
+  .pastas { display: grid; gap: 0 24px; margin-top: 36px; grid-template-columns: 1fr; align-items: start; }
+  @media (min-width: 900px) { .pastas { grid-template-columns: repeat(2, 1fr); } }
+  .lista-docs { list-style: none; margin: 0; padding: 0; background: var(--fundo); border: 1px solid var(--linha); border-radius: 12px; }
+  .lista-docs li { border-top: 1px solid var(--linha); }
+  .lista-docs li:first-child { border-top: 0; }
+  .lista-docs a { display: block; padding: 10px 16px; font-weight: 600; text-decoration: none; }
+  .lista-docs a:hover { text-decoration: underline; }
+  .portal .nota { color: var(--texto-2); margin-top: 28px; }
+  :root { --borda-pasta: var(--linha); --fundo-pasta: var(--superficie); --foco: var(--amarelo); }
+""" + CSS_PASTAS
 
 
 def transparencia():
-    return f"""<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8">
-{NOINDEX}<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Transparência | AADAS</title>
-<meta name="description" content="Portal da Transparência da AADAS: documentos institucionais, parcerias com o poder público, equipe, contas e relatórios de atividades.">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="AADAS">
-<meta property="og:locale" content="pt_BR">
-<meta property="og:title" content="Transparência | AADAS">
-<meta property="og:description" content="Estatuto, termos de colaboração, contas e relatórios de atividades da AADAS.">
-<meta property="og:url" content="https://www.aadas.org/transparencia">
-<meta property="og:image" content="https://www.aadas.org/assets/og-image.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://www.aadas.org/assets/og-image.jpg">
-<meta name="theme-color" content="#1a184d">
-<link rel="icon" href="/assets/simbolo.png">
-<link rel="canonical" href="https://www.aadas.org/transparencia">
-<link rel="stylesheet" href="/design-system/tokens.css">
-<style>
-  * {{ box-sizing: border-box; }}
-  body {{ margin: 0; font-family: var(--fonte-texto); font-size: var(--fs-corpo); line-height: var(--lh-corpo);
-         color: var(--texto); background: var(--fundo-pagina); }}
-  h1, h2, .marca {{ font-family: var(--fonte-titulo); }}
-  a:focus-visible {{ outline: 3px solid var(--foco); outline-offset: 2px; box-shadow: 0 0 0 6px var(--cor-marca); }}
-  .wrap {{ max-width: 860px; margin: 0 auto; padding: 0 16px; }}
-  header {{ background: var(--fundo-inverso); color: var(--texto-inverso); border-bottom: 6px solid var(--cor-destaque); }}
-  header .wrap {{ padding-top: 32px; padding-bottom: 28px; }}
-  .marca {{ font-weight: 800; letter-spacing: .04em; color: var(--texto-inverso); text-decoration: none; }}
-  .marca span {{ color: var(--cor-destaque); }}
-  h1 {{ font-size: clamp(1.8rem, 4vw, 2.6rem); margin: 14px 0 0; line-height: 1.15; }}
-  main {{ padding-bottom: 56px; }}
-  h2 {{ color: var(--cor-marca); font-size: 1.25rem; margin: 40px 0 8px; }}
-  .lista-docs {{ list-style: none; margin: 0; padding: 0; background: var(--fundo-superficie);
-                border: 1px solid var(--borda); border-radius: 10px; }}
-  .lista-docs li {{ border-top: 1px solid var(--borda); }}
-  .lista-docs li:first-child {{ border-top: 0; }}
-  .lista-docs a {{ display: block; padding: 12px 16px; font-weight: 600; color: var(--texto-link); text-decoration: none; }}
-  .lista-docs a:hover {{ text-decoration: underline; }}
-  :root {{ --borda-pasta: var(--borda); --fundo-pasta: var(--fundo-superficie); }}
-  main.wrap {{ padding-top: 32px; }}
-{CSS_PASTAS}
-</style>
-</head>
-<body>
-<header>
-  <div class="wrap">
-    <a class="marca" href="/">AADAS <span>●</span></a>
-    <h1>Transparência</h1>
-  </div>
-</header>
-<main class="wrap">
+    """Página própria do portal, com o mesmo topo, menu, rodapé e VLibras da landing."""
+    t = (RAIZ / "landing/index.html").read_text(encoding="utf-8")
+    topo, resto = t.split('<main id="conteudo">', 1)
+    rodape = resto.split("</main>", 1)[1]
+    desc = ("Portal da Transparência da AADAS: documentos institucionais, convênios e parcerias com o poder público, "
+            "demonstrações contábeis e relatórios de atividades.")
+    topo = troca(topo, '<meta charset="utf-8">\n', '<meta charset="utf-8">\n' + NOINDEX)
+    topo = re.sub(r"<title>.*?</title>", "<title>Portal da Transparência | AADAS</title>", topo, count=1)
+    topo = re.sub(r'(<meta (?:name|property)="(?:description|og:description|twitter:description)" content=")[^"]*"',
+                  lambda m: m.group(1) + desc + '"', topo)
+    topo = re.sub(r'(<meta (?:property|name)="(?:og:title|twitter:title)" content=")[^"]*"',
+                  lambda m: m.group(1) + 'Portal da Transparência | AADAS"', topo)
+    topo = troca(topo, '<meta property="og:url" content="https://www.aadas.org/">',
+                 '<meta property="og:url" content="https://www.aadas.org/transparencia">')
+    topo = troca(topo, '<link rel="canonical" href="https://www.aadas.org/">',
+                 '<link rel="canonical" href="https://www.aadas.org/transparencia">')
+    topo = remove(topo, r'<link rel="preload" as="image"[^>]*>\n')
+    topo = troca(topo, "</style>", CSS_PORTAL + "</style>")
+    topo = troca(topo, '<a href="../transparencia/index.html">Transparência</a>',
+                 '<a href="../transparencia/index.html" aria-current="page">Transparência</a>')
+    corpo = f"""<main id="conteudo">
+  <section class="portal">
+    <div class="wrap">
+      <p class="sobretitulo">Transparência</p>
+      <h1>Portal da Transparência</h1>
+      <p class="lead">Documentos da AADAS para associados, parceiros, doadores e poder público. Clique numa pasta para ver os arquivos.</p>
+      <div class="pastas">
 {lista_documentos(2)}
-</main>
-{VLIBRAS}</body>
-</html>
+      </div>
+      <p class="nota">Não encontrou o que procurava? Escreva para <a href="mailto:contato@aadasjc.org">contato@aadasjc.org</a>.</p>
+    </div>
+  </section>
+</main>"""
+    abre = """<script>
+  // /transparencia#contabeis chega com a pasta aberta
+  (function () {
+    function abrir() { var d = location.hash && document.getElementById(location.hash.slice(1));
+      if (d && d.tagName === 'DETAILS') { d.open = true; d.scrollIntoView(); } }
+    abrir(); window.addEventListener('hashchange', abrir);
+  })();
+</script>
 """
+    rodape = troca(rodape, "</body>", abre + "</body>")
+    pagina = topo + corpo + rodape
+    # página fica em /transparencia: caminhos relativos e âncoras passam a apontar para a raiz
+    pagina = re.sub(r'(src|href)="assets/', r'\1="/assets/', pagina)
+    pagina = troca(pagina, 'href="#topo"', 'href="/"')
+    pagina = re.sub(r'href="#(quem-somos|redes|apoie|visite)"', r'href="/#\1"', pagina)
+    return troca(pagina, "../transparencia/index.html", PORTAL)
 
 
 # Arquivos locais da Vercel CLI: ficam entre um build e outro e não são publicados
@@ -183,8 +183,6 @@ def main():
             shutil.rmtree(item) if item.is_dir() else item.unlink()
     (SAIDA / "transparencia").mkdir(parents=True)
     shutil.copytree(RAIZ / "landing/assets", SAIDA / "assets")
-    (SAIDA / "design-system").mkdir()
-    shutil.copy2(RAIZ / "design-system/tokens.css", SAIDA / "design-system/tokens.css")
     # PDFs já tarjados (LGPD); a página só aponta para arquivos que estão aqui
     shutil.copytree(RAIZ / "transparencia/documentos", SAIDA / "transparencia/documentos")
     (SAIDA / "index.html").write_text(landing(), encoding="utf-8")

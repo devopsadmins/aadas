@@ -180,17 +180,17 @@
   .redes-lista span { display: grid; font-size: .95rem; color: var(--texto-2); min-width: 0; overflow-wrap: anywhere; }
   .redes-lista strong { color: var(--texto); font-size: 1.02rem; }
 
-  /* Transparência */
+  /* Transparência: chamada para o portal; os documentos ficam na página /transparencia */
   .transparencia { background: var(--superficie-2); }
-  .transparencia h2 { margin-top: 12px; }
-  .docs-grade { display: grid; gap: 24px; margin-top: 28px; grid-template-columns: 1fr; align-items: start; }
-  @media (min-width: 900px) { .docs-grade { grid-template-columns: repeat(2, 1fr); } }
-  .grupo-docs h3 { font-size: 1.05rem; margin: 0 0 8px; }
-  .lista-docs { list-style: none; margin: 0; padding: 0; background: var(--superficie); border: 1px solid var(--linha); border-radius: 12px; }
-  .lista-docs li { border-top: 1px solid var(--linha); }
-  .lista-docs li:first-child { border-top: 0; }
-  .lista-docs a { display: block; padding: 10px 16px; font-weight: 600; text-decoration: none; }
-  .lista-docs a:hover { text-decoration: underline; }
+  .transparencia .wrap { display: grid; gap: 28px; align-items: center; }
+  @media (min-width: 900px) { .transparencia .wrap { grid-template-columns: 1fr 1fr; gap: 64px; } }
+  .pastas-resumo { list-style: none; margin: 0 0 24px; padding: 0; display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .pastas-resumo a { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--superficie); border: 1px solid var(--linha); border-radius: 12px;
+                     font-weight: 600; color: var(--texto); text-decoration: none; transition: border-color .2s, transform .25s cubic-bezier(.16, 1, .3, 1); }
+  .pastas-resumo a:hover { border-color: var(--azul-medio); transform: translateY(-2px); }
+  .pastas-resumo i { font-size: 1.5rem; color: var(--azul-medio); }
+  .btn-azul { background: var(--azul-bloco, var(--azul)); color: #fff; white-space: normal; }
+  .btn-azul:hover { box-shadow: 0 10px 24px -12px rgba(0, 23, 72, .8); transform: translateY(-1px); }
 
   /* Apoie */
   .apoie .wrap { display: grid; gap: 44px; align-items: center; }
@@ -252,7 +252,7 @@
       <ul>
         <li><a href="#quem-somos">Quem somos</a></li>
         <li><a href="#redes">Redes sociais</a></li>
-        <li><a href="#transparencia">Transparência</a></li>
+        <li><a href="../transparencia/index.html">Transparência</a></li>
         <li><a href="#apoie">Apoie</a></li>
         <li><a href="#visite">Visite</a></li>
       </ul>
@@ -328,62 +328,18 @@
 
   <section class="transparencia" id="transparencia">
     <div class="wrap">
-      <h2>Transparência</h2>
-      <div class="docs-grade">
-<!-- documentos:inicio -->
-  <div class="grupo-docs">
-    <h3>Documentos institucionais</h3>
-    <ul class="lista-docs">
-      <li><a href="/transparencia/documentos/estatuto-social.pdf" download>Estatuto Social</a></li>
-      <li><a href="/transparencia/documentos/regulamento-interno.pdf" download>Regulamento Interno</a></li>
-      <li><a href="/transparencia/documentos/certidao-dirigentes-2026-2030.pdf" download>Certidão de Dirigentes e Conselheiros, gestão 2026 a 2030</a></li>
-    </ul>
-  </div>
-  <div class="grupo-docs">
-    <h3>Termo de Colaboração nº 32/2018, Prefeitura de São José dos Campos</h3>
-    <ul class="lista-docs">
-      <li><a href="/transparencia/documentos/tc-32-2018-termo.pdf" download>Termo de Colaboração nº 32/2018</a></li>
-      <li><a href="/transparencia/documentos/plano-de-trabalho-2026.pdf" download>Plano de Trabalho 2026</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-01.pdf" download>1º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-02.pdf" download>2º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-03.pdf" download>3º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-04.pdf" download>4º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-05.pdf" download>5º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-06.pdf" download>6º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-07.pdf" download>7º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-aditivo-08.pdf" download>8º Termo Aditivo</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-apostilamento-01.pdf" download>1º Apostilamento</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-apostilamento-02.pdf" download>2º Apostilamento</a></li>
-      <li><a href="/transparencia/documentos/tc-32-2018-apostilamento-03.pdf" download>3º Apostilamento</a></li>
-    </ul>
-  </div>
-  <div class="grupo-docs">
-    <h3>Equipe</h3>
-    <ul class="lista-docs">
-      <li><a href="/transparencia/documentos/cargos-e-salarios-2025.pdf" download>Relação de cargos e salários 2025</a></li>
-    </ul>
-  </div>
-  <div class="grupo-docs">
-    <h3>Prestação de contas</h3>
-    <ul class="lista-docs">
-      <li><a href="/transparencia/documentos/demonstracoes-contabeis-2025.pdf" download>Demonstrações contábeis 2025</a></li>
-      <li><a href="/transparencia/documentos/demonstracoes-contabeis-2024.pdf" download>Demonstrações contábeis 2024</a></li>
-    </ul>
-  </div>
-  <div class="grupo-docs">
-    <h3>Relatórios de atividades</h3>
-    <ul class="lista-docs">
-      <li><a href="/transparencia/documentos/relatorio-atividades-2025.pdf" download>Relatório de atividades 2025</a></li>
-      <li><a href="/transparencia/documentos/relatorio-atividades-2024.pdf" download>Relatório de atividades 2024</a></li>
-      <li><a href="/transparencia/documentos/relatorio-atividades-2023.pdf" download>Relatório de atividades 2023</a></li>
-      <li><a href="/transparencia/documentos/relatorio-atividades-2022.pdf" download>Relatório de atividades 2022</a></li>
-      <li><a href="/transparencia/documentos/relatorio-atividades-2021.pdf" download>Relatório de atividades 2021</a></li>
-      <li><a href="/transparencia/documentos/relatorio-atividades-2020.pdf" download>Relatório de atividades 2020</a></li>
-      <li><a href="/transparencia/documentos/relatorio-atividades-2019.pdf" download>Relatório de atividades 2019</a></li>
-      <li><a href="/transparencia/documentos/relatorio-atividades-2018.pdf" download>Relatório de atividades 2018</a></li>
-    </ul>
-  </div>
-<!-- documentos:fim -->
+      <div class="revela">
+        <h2>Transparência</h2>
+        <p class="lead">Estatuto, parcerias com o poder público, demonstrações contábeis e relatórios de atividades da AADAS, todos reunidos no Portal da Transparência.</p>
+      </div>
+      <div class="revela">
+        <ul class="pastas-resumo">
+          <li><a href="../transparencia/index.html#institucionais"><i class="ph ph-bank" aria-hidden="true"></i>Documentos institucionais</a></li>
+          <li><a href="../transparencia/index.html#parcerias"><i class="ph ph-handshake" aria-hidden="true"></i>Convênios e parcerias</a></li>
+          <li><a href="../transparencia/index.html#contabeis"><i class="ph ph-calculator" aria-hidden="true"></i>Documentos contábeis</a></li>
+          <li><a href="../transparencia/index.html#relatorios"><i class="ph ph-chart-line-up" aria-hidden="true"></i>Relatórios de atividades</a></li>
+        </ul>
+        <a class="btn btn-azul" href="../transparencia/index.html">Acessar o Portal da Transparência<i class="ph ph-arrow-right" aria-hidden="true"></i></a>
       </div>
     </div>
   </section>
